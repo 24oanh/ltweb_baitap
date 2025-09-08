@@ -1,75 +1,97 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <!DOCTYPE html>
-<html lang="vi">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Đăng nhập</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta charset="UTF-8">
+<title>Đăng nhập</title>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+body {
+	font-family: Arial, sans-serif;
+	background: #f2f2f2;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+}
+
+.login-container {
+	background: #fff;
+	padding: 20px 30px;
+	border-radius: 10px;
+	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+	width: 350px;
+}
+
+h2 {
+	text-align: center;
+	margin-bottom: 20px;
+}
+
+.form-control {
+	width: 100%;
+	padding: 10px;
+	margin: 8px 0;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+}
+
+.btn {
+	width: 100%;
+	padding: 10px;
+	background: #007bff;
+	border: none;
+	color: #fff;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.btn:hover {
+	background: #0056b3;
+}
+
+.alert {
+	color: red;
+	text-align: center;
+	margin-bottom: 10px;
+}
+
+.extra {
+	margin-top: 15px;
+	text-align: center;
+}
+</style>
 </head>
-<body class="bg-light">
+<body>
+	<div class="login-container">
+		<form action="${pageContext.request.contextPath}/login" method="post">
+			<h2>Đăng nhập</h2>
 
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-5">
-                <div class="card shadow-lg rounded-4 border-0">
-                    <div class="card-body p-4">
-                        <h2 class="text-center mb-4 text-primary">
-                            <i class="fa fa-user-circle"></i> Đăng nhập
-                        </h2>
+			<c:if test="${alert != null}">
+				<div class="alert">${alert}</div>
+			</c:if>
 
-                        <!-- Hiển thị thông báo lỗi -->
-                        <c:if test="${alert != null}">
-                            <div class="alert alert-danger text-center fw-bold">
-                                ${alert}
-                            </div>
-                        </c:if>
+			<input type="text" placeholder="Tên đăng nhập" name="username"
+				class="form-control" required> <input type="password"
+				placeholder="Mật khẩu" name="password" class="form-control" required>
 
-                        <!-- Form đăng nhập -->
-                        <form action="login" method="post">
-                            <!-- Username -->
-                            <div class="mb-3 input-group">
-                                <span class="input-group-text bg-primary text-white">
-                                    <i class="fa fa-user"></i>
-                                </span>
-                                <input type="text" class="form-control" 
-                                       name="username" placeholder="Tên đăng nhập" 
-                                       required autofocus>
-                            </div>
+			<label> <input type="checkbox" name="remember"> Ghi
+				nhớ đăng nhập
+			</label>
 
-                            <!-- Password -->
-                            <div class="mb-3 input-group">
-                                <span class="input-group-text bg-primary text-white">
-                                    <i class="fa fa-lock"></i>
-                                </span>
-                                <input type="password" class="form-control" 
-                                       name="password" placeholder="Mật khẩu" 
-                                       required>
-                            </div>
+			<button type="submit" class="btn">Đăng nhập</button>
 
-                            <!-- Submit button -->
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-primary fw-bold">
-                                    <i class="fa fa-sign-in-alt"></i> Đăng nhập
-                                </button>
-                            </div>
-                        </form>
+			<div class="extra">
+				Chưa có tài khoản? <a
+					href="${pageContext.request.contextPath}/register">Đăng ký</a><br>
+				<a href="${pageContext.request.contextPath}/forgot">Quên
+					mật khẩu?</a>
+			</div>
 
-                    </div>
-                </div>
-                <p class="text-center mt-3 text-muted">
-                    © 2025 - Hệ thống quản lý
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+		</form>
+	</div>
 </body>
 </html>
