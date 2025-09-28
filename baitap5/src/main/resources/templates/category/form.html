@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head">
+    <title th:text="${category.id != null ? 'Sửa danh mục' : 'Thêm danh mục'} + ' - Video Management System'"></title>
+</head>
+<body>
+    <nav th:replace="fragments/layout :: navbar"></nav>
+    <div th:replace="fragments/layout :: alerts"></div>
+    
+    <div class="container mt-4">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/home" class="text-decoration-none">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a href="/categories" class="text-decoration-none">Quản lý danh mục</a></li>
+                <li class="breadcrumb-item active" th:text="${category.id != null ? 'Sửa danh mục' : 'Thêm danh mục'}"></li>
+            </ol>
+        </nav>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-xl-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">
+                            <i class="fas fa-folder me-2"></i>
+                            <span th:text="${category.id != null ? 'Sửa danh mục' : 'Thêm danh mục mới'}"></span>
+                        </h4>
+                    </div>
+                    
+                    <div class="card-body p-4">
+                        <form method="post" 
+                              th:action="${category.id != null ? '/categories/edit/' + category.id : '/categories/add'}"
+                              th:object="${category}" 
+                              enctype="multipart/form-data">
+                            
+                            <!-- Category Code -->
+                            <div class="mb-4">
+                                <label for="code" class="form-label fw-semibold">
+                                    <i class="fas fa-code text-primary me-1"></i>
+                                    Mã code danh mục <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" class="form-control form-control-lg" id="code" th:field="*{code}" 
+                                       placeholder="VD: TECH, MUSIC, SPORT..."
+                                       th:class="${#fields.hasErrors('code')} ? 'form-control form-control-lg is-invalid' : 'form-control form-control-lg'">
+                                <div class="form-text">Chỉ sử dụng chữ cái in hoa, số và dấu gạch dưới</div>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('code')}" th:errors="*{code}"></div>
+                            </div>
+
+                            <!-- Category Name -->
+                            <div class="mb-4">
+                                <label for="name" class="form-label fw-semibold">
+                                    <i class="fas fa-tag text-primary me-1"></i>
+                                    Tên danh mục <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" class="form-control form-control-lg" id="name" th:field="*{name}"
+                                       placeholder="Nhập tên danh mục..."
+                                       th:class="${#fields.hasErrors('name')} ? 'form-control form-control-lg is-invalid' : 'form-control form-control-lg'">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                            </div>
+
+                            <!-- Image Upload -->
+                            <div class="mb-4">
+                                <label for="imageFile" class="form-label fw-semibold">
+                                    <i class="fas fa-image text-primary me-1"></i>
+                                    Hình ảnh danh mục
+                                </label>
+                                <input type="file" class="form-control" id="imageFile" name="imageFile" 
+                                       accept="image/*" onchange="previewImage(this, 'imagePreview')">
+                                <div class="form-text">Chỉ chấp nhận file ảnh (JPG, PNG, GIF). Kích thước tối đa: 10MB</div>
+                                
+                                <!-- Current Image -->
+                                <div th:if="${category.image}" class="mt-3">
+                                    <label class="form-label">Hình ảnh hiện tại:</label>
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-file-image text-success me-2"></i>
+                                        <span class="text-muted" th:text="${category.image}"></span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Image Preview -->
+                                <img id="imagePreview" class="img-thumbnail mt-2" style="max-width: 200px; display: none;" alt="Preview">
+                            </div>
+
+                            <!-- Status -->
+                            <div class="mb-4">
+                                <label for="active" class="form-label fw-semibold">
+                                    <i class="fas fa-toggle-on text-primary me-1"></i>
+                                    Trạng thái hoạt động
+                                </label>
+                                <select class="form-select form-select-lg" id="active" th:field="*{active}">
+                                    <option value="true">🟢 Hoạt động</option>
+                                    <option value="false">🔴 Ngừng hoạt động</option>
+                                </select>
+                                <div class="form-text">Chọn trạng thái hiển thị của danh mục</div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a href="/categories" class="btn btn-outline-secondary btn-lg">
+                                    <i class="fas fa-arrow-left me-2"></i>Quay lại
+                                </a>
+                                <button type="submit" class="btn btn-primary btn-lg px-4">
+                                    <i class="fas fa-save me-2"></i>
+                                    <span th:text="${category.id != null ? 'Cập nhật' : 'Thêm mới'}"></span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer th:replace="fragments/layout :: footer"></footer>
+    <script th:replace="fragments/layout :: scripts"></script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!-- home.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head">
+    <title>Trang chủ - Video Management System</title>
+</head>
+<body>
+    <nav th:replace="fragments/layout :: navbar"></nav>
+    <div th:replace="fragments/layout :: alerts"></div>
+    
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h1 class="display-6 fw-bold text-primary">
+                            <i class="fas fa-tachometer-alt me-2"></i>Trang chủ quản lý
+                        </h1>
+                        <p class="text-muted">Chào mừng bạn đến với hệ thống quản lý video</p>
+                    </div>
+                    <div class="text-end">
+                        <small class="text-muted">
+                            <i class="fas fa-calendar-alt me-1"></i>
+                            <span th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy HH:mm')}"></span>
+                        </small>
+                    </div>
+                </div>
+                
+                <div class="row g-4">
+                    <!-- Category Card -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card stats-card h-100 border-0 shadow-sm">
+                            <div class="card-body p-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <div class="bg-primary bg-gradient text-white rounded-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                                            <i class="fas fa-folder fa-lg"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h5 class="card-title mb-1">Quản lý Danh mục</h5>
+                                        <p class="card-text text-muted small mb-2">Quản lý các danh mục video của hệ thống</p>
+                                        <a href="/categories" class="btn btn-primary btn-sm">
+                                            <i class="fas fa-arrow-right me-1"></i>Xem chi tiết
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Video Card -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card stats-card h-100 border-0 shadow-sm">
+                            <div class="card-body p-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <div class="bg-success bg-gradient text-white rounded-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                                            <i class="fas fa-play fa-lg"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h5 class="card-title mb-1">Quản lý Video</h5>
+                                        <p class="card-text text-muted small mb-2">Quản lý nội dung video và thông tin</p>
+                                        <a href="/videos" class="btn btn-success btn-sm">
+                                            <i class="fas fa-arrow-right me-1"></i>Xem chi tiết
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- User Card -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card stats-card h-100 border-0 shadow-sm">
+                            <div class="card-body p-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <div class="bg-info bg-gradient text-white rounded-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                                            <i class="fas fa-users fa-lg"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h5 class="card-title mb-1">Quản lý Người dùng</h5>
+                                        <p class="card-text text-muted small mb-2">Quản lý tài khoản người dùng hệ thống</p>
+                                        <a href="/users" class="btn btn-info btn-sm">
+                                            <i class="fas fa-arrow-right me-1"></i>Xem chi tiết
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="row mt-5">
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-light border-0">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-bolt text-warning me-2"></i>Thao tác nhanh
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-2">
+                                    <div class="col-md-3 col-6">
+                                        <a href="/categories/add" class="btn btn-outline-primary w-100">
+                                            <i class="fas fa-plus me-1"></i>Thêm danh mục
+                                        </a>
+                                    </div>
+                                    <div class="col-md-3 col-6">
+                                        <a href="/videos/add" class="btn btn-outline-success w-100">
+                                            <i class="fas fa-plus me-1"></i>Thêm video
+                                        </a>
+                                    </div>
+                                    <div class="col-md-3 col-6">
+                                        <a href="/users/add" class="btn btn-outline-info w-100">
+                                            <i class="fas fa-plus me-1"></i>Thêm người dùng
+                                        </a>
+                                    </div>
+                                    <div class="col-md-3 col-6">
+                                        <a href="#" onclick="window.print()" class="btn btn-outline-secondary w-100">
+                                            <i class="fas fa-print me-1"></i>In báo cáo
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer th:replace="fragments/layout :: footer"></footer>
+    <script th:replace="fragments/layout :: scripts"></script>
+</body>
+</html>

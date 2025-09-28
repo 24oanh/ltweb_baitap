@@ -1,0 +1,176 @@
+<!-- video/form.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head">
+    <title th:text="${video.id != null ? 'Sửa video' : 'Thêm video'} + ' - Video Management System'"></title>
+</head>
+<body>
+    <nav th:replace="fragments/layout :: navbar"></nav>
+    <div th:replace="fragments/layout :: alerts"></div>
+    
+    <div class="container mt-4">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/home" class="text-decoration-none">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a href="/videos" class="text-decoration-none">Quản lý video</a></li>
+                <li class="breadcrumb-item active" th:text="${video.id != null ? 'Sửa video' : 'Thêm video'}"></li>
+            </ol>
+        </nav>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-8">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <h4 class="mb-0">
+                            <i class="fas fa-play me-2"></i>
+                            <span th:text="${video.id != null ? 'Sửa video' : 'Thêm video mới'}"></span>
+                        </h4>
+                    </div>
+                    
+                    <div class="card-body p-4">
+                        <form method="post" 
+                              th:action="${video.id != null ? '/videos/edit/' + video.id : '/videos/add'}"
+                              th:object="${video}" 
+                              enctype="multipart/form-data">
+                            
+                            <div class="row">
+                                <!-- Left Column -->
+                                <div class="col-lg-6">
+                                    <!-- Video ID (Read-only for edit) -->
+                                    <div class="mb-4" th:if="${video.id != null}">
+                                        <label for="videoId" class="form-label fw-semibold">
+                                            <i class="fas fa-hashtag text-success me-1"></i>
+                                            ID Video
+                                        </label>
+                                        <input type="text" class="form-control-plaintext form-control-lg bg-light" 
+                                               id="videoId" th:value="${video.id}" readonly>
+                                        <div class="form-text">ID video không thể thay đổi</div>
+                                    </div>
+
+                                    <!-- Video Name -->
+                                    <div class="mb-4">
+                                        <label for="videoName" class="form-label fw-semibold">
+                                            <i class="fas fa-video text-success me-1"></i>
+                                            Tên video <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="text" class="form-control form-control-lg" id="videoName" th:field="*{videoName}" 
+                                               placeholder="Nhập tên video..."
+                                               th:class="${#fields.hasErrors('videoName')} ? 'form-control form-control-lg is-invalid' : 'form-control form-control-lg'">
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('videoName')}" th:errors="*{videoName}"></div>
+                                    </div>
+
+                                    <!-- Category Selection -->
+                                    <div class="mb-4">
+                                        <label for="category" class="form-label fw-semibold">
+                                            <i class="fas fa-folder text-success me-1"></i>
+                                            Danh mục <span class="text-danger">*</span>
+                                        </label>
+                                        <select class="form-select form-select-lg" id="category" th:field="*{category.id}"
+                                                th:class="${#fields.hasErrors('category')} ? 'form-select form-select-lg is-invalid' : 'form-select form-select-lg'">
+                                            <option value="">-- Chọn danh mục video --</option>
+                                            <option th:each="cat : ${categories}" 
+                                                    th:value="${cat.id}" 
+                                                    th:text="${cat.name + ' (' + cat.code + ')'}"
+                                                    th:selected="${video.category != null && video.category.id == cat.id}">
+                                            </option>
+                                        </select>
+                                        <div class="form-text">Chọn danh mục phù hợp cho video</div>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></div>
+                                    </div>
+
+                                    <!-- Active Status -->
+                                    <div class="mb-4">
+                                        <label for="active" class="form-label fw-semibold">
+                                            <i class="fas fa-toggle-on text-success me-1"></i>
+                                            Trạng thái hiển thị
+                                        </label>
+                                        <select class="form-select form-select-lg" id="active" th:field="*{active}">
+                                            <option value="true">🟢 Hiển thị công khai</option>
+                                            <option value="false">🔴 Ẩn video</option>
+                                        </select>
+                                        <div class="form-text">Chọn trạng thái hiển thị của video</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Right Column -->
+                                <div class="col-lg-6">
+                                    <!-- Description -->
+                                    <div class="mb-4">
+                                        <label for="description" class="form-label fw-semibold">
+                                            <i class="fas fa-align-left text-success me-1"></i>
+                                            Mô tả video
+                                        </label>
+                                        <textarea class="form-control" id="description" rows="6" th:field="*{description}"
+                                                  placeholder="Nhập mô tả chi tiết về video..."></textarea>
+                                        <div class="form-text">Mô tả chi tiết giúp người xem hiểu rõ nội dung video</div>
+                                    </div>
+
+                                    <!-- Image Upload -->
+                                    <div class="mb-4">
+                                        <label for="imageUpload" class="form-label fw-semibold">
+                                            <i class="fas fa-image text-success me-1"></i>
+                                            Hình ảnh thumbnail
+                                        </label>
+                                        <input type="file" class="form-control" id="imageUpload" name="imageUpload" 
+                                               accept="image/*" onchange="previewImage(this, 'imagePreview')">
+                                        <div class="form-text">Chọn hình ảnh đại diện cho video (JPG, PNG, GIF - tối đa 10MB)</div>
+                                        
+                                        <!-- Current Image -->
+                                        <div th:if="${video.imageFile}" class="mt-3">
+                                            <label class="form-label">Hình ảnh hiện tại:</label>
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-file-image text-success me-2"></i>
+                                                <span class="text-muted" th:text="${video.imageFile}"></span>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Image Preview -->
+                                        <div class="mt-2">
+                                            <img id="imagePreview" class="img-thumbnail" style="max-width: 300px; max-height: 200px; display: none;" alt="Preview">
+                                        </div>
+                                    </div>
+
+                                    <!-- Views Display (for edit mode) -->
+                                    <div class="mb-4" th:if="${video.id != null}">
+                                        <label class="form-label fw-semibold">
+                                            <i class="fas fa-eye text-success me-1"></i>
+                                            Lượt xem
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">
+                                                <i class="fas fa-chart-line"></i>
+                                            </span>
+                                            <input type="text" class="form-control-plaintext form-control bg-light" 
+                                                   th:value="${video.views ?: 0} + ' lượt xem'" readonly>
+                                        </div>
+                                        <div class="form-text">Số lượt xem được cập nhật tự động</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <a href="/videos" class="btn btn-outline-secondary btn-lg">
+                                            <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách
+                                        </a>
+                                        <button type="submit" class="btn btn-success btn-lg px-5">
+                                            <i class="fas fa-save me-2"></i>
+                                            <span th:text="${video.id != null ? 'Cập nhật video' : 'Thêm video mới'}"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer th:replace="fragments/layout :: footer"></footer>
+    <script th:replace="fragments/layout :: scripts"></script>
+</body>
+</html>
