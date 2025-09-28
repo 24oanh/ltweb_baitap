@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head">
+    <title>Quản lý người dùng - Video Management System</title>
+</head>
+<body>
+    <nav th:replace="fragments/layout :: navbar"></nav>
+    <div th:replace="fragments/layout :: alerts"></div>
+    
+    <div class="container mt-4">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/home" class="text-decoration-none">Trang chủ</a></li>
+                <li class="breadcrumb-item active">Quản lý người dùng</li>
+            </ol>
+        </nav>
+        
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold text-info">
+                    <i class="fas fa-users me-2"></i>Quản lý người dùng
+                </h2>
+                <p class="text-muted mb-0">Quản lý tài khoản và thông tin người dùng hệ thống</p>
+            </div>
+            <div class="btn-group">
+                <a href="/users/add" class="btn btn-info">
+                    <i class="fas fa-plus me-1"></i>Thêm người dùng
+                </a>
+                <a href="/home" class="btn btn-outline-secondary">
+                    <i class="fas fa-home me-1"></i>Trang chủ
+                </a>
+            </div>
+        </div>
+
+        <!-- Content Card -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-bottom">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h5 class="mb-0">
+                            <i class="fas fa-list me-2 text-info"></i>Danh sách người dùng
+                        </h5>
+                    </div>
+                    <div class="col-auto">
+                        <span class="badge bg-info" th:text="'Tổng: ' + ${users.size()}">Tổng: 0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-body p-0">
+                <!-- Empty State -->
+                <div th:if="${#lists.isEmpty(users)}" th:replace="fragments/layout :: empty-state('users', 'Chưa có thông tin được thêm', 'Bắt đầu bằng cách thêm người dùng mới')"></div>
+                
+                <!-- Data Table -->
+                <div th:unless="${#lists.isEmpty(users)}">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="text-center" style="width: 60px;">#ID</th>
+                                    <th style="width: 120px;">Username</th>
+                                    <th style="width: 180px;">Email</th>
+                                    <th style="width: 150px;">Họ tên</th>
+                                    <th class="text-center" style="width: 120px;">Số điện thoại</th>
+                                    <th class="text-center" style="width: 80px;">Vai trò</th>
+                                    <th class="text-center" style="width: 100px;">Trạng thái</th>
+                                    <th class="text-center" style="width: 120px;">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="user, iterStat : ${users}">
+                                    <td class="text-center fw-bold text-muted" th:text="${user.id}"></td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2" 
+                                                 style="width: 32px; height: 32px; font-size: 12px;">
+                                                <span th:text="${#strings.substring(user.username, 0, 2).toUpperCase()}"></span>
+                                            </div>
+                                            <span class="fw-semibold" th:text="${user.username}"></span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="fw-normal" th:text="${user.email}"></div>
+                                    </td>
+                                    <td>
+                                        <span th:text="${user.fullname}"></span>
+                                    </td>
+                                    <td class="text-center">
+                                        <div th:if="${user.phone}">
+                                            <i class="fas fa-phone text-success me-1"></i>
+                                            <small th:text="${user.phone}"></small>
+                                        </div>
+                                        <span th:unless="${user.phone}" class="text-muted fst-italic">Chưa có</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span th:if="${user.roleId == 1}" class="badge bg-danger">
+                                            <i class="fas fa-crown me-1"></i>Admin
+                                        </span>
+                                        <span th:unless="${user.roleId == 1}" class="badge bg-secondary">
+                                            <i class="fas fa-user me-1"></i>User
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span th:if="${user.active}" class="badge bg-success">
+                                            <i class="fas fa-check-circle me-1"></i>Hoạt động
+                                        </span>
+                                        <span th:unless="${user.active}" class="badge bg-danger">
+                                            <i class="fas fa-ban me-1"></i>Ngưng hoạt động
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="btn-group btn-group-sm">
+                                            <a th:href="@{/users/edit/{id}(id=${user.id})}" 
+                                               class="btn btn-outline-warning" title="Chỉnh sửa">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <form method="post" th:action="@{/users/delete/{id}(id=${user.id})}" 
+                                                  class="d-inline" onsubmit="return confirmDelete('Bạn có chắc chắn muốn xóa người dùng này?')">
+                                                <button type="submit" class="btn btn-outline-danger" title="Xóa">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer th:replace="fragments/layout :: footer"></footer>
+    <script th:replace="fragments/layout :: scripts"></script>
+</body>
+</html>
